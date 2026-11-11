@@ -1,0 +1,11 @@
+import { db } from "./server/_core/db";
+import { sql } from "drizzle-orm";
+const r:any = await db.execute(sql.raw(`select symbol, count(*)::int c from news_symbol_map group by symbol order by c desc limit 15`));
+console.log("top mapped:", r.rows);
+const o:any = await db.execute(sql.raw(`select count(*)::int c from news_symbol_map where symbol='OGDC'`));
+console.log("OGDC mappings:", o.rows);
+const n:any = await db.execute(sql.raw(`select headline, source_name, priority from news_items order by published_at desc limit 8`));
+console.log(n.rows);
+const f:any = await db.execute(sql.raw(`select count(*)::int c from stocks where fundamentals_updated_at is not null`));
+console.log("stocks with fundamentals ts:", f.rows);
+process.exit(0);

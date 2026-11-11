@@ -1,0 +1,13 @@
+import { db } from "./server/_core/db";
+import { sql } from "drizzle-orm";
+const m:any = await db.execute(sql.raw(`select count(*)::int c, count(distinct news_id)::int n from news_symbol_map`));
+console.log("mappings:", m.rows[0]);
+const a:any = await db.execute(sql.raw(`select count(*)::int c from announcements`));
+console.log("announcements:", a.rows[0]);
+const o:any = await db.execute(sql.raw(`select count(*)::int c from announcements where symbol='OGDC'`));
+console.log("OGDC anns:", o.rows[0]);
+const s:any = await db.execute(sql.raw(`select symbol, count(*)::int c from announcements group by symbol order by c desc limit 8`));
+console.log(s.rows);
+const n:any = await db.execute(sql.raw(`select count(*)::int c from news_items`));
+console.log("news:", n.rows[0]);
+process.exit(0);

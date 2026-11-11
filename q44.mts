@@ -1,0 +1,16 @@
+import { db } from "./server/_core/db";
+import { sql } from "drizzle-orm";
+const q = async (s:string)=>{const r:any=await db.execute(sql.raw(s));return r.rows[0];};
+console.log("stocks", (await q(`select count(*)::int c from stocks`)).c);
+console.log("with price", (await q(`select count(*)::int c from stocks where price is not null`)).c);
+console.log("fund symbols", (await q(`select count(distinct symbol)::int c from stock_fundamentals`)).c);
+console.log("fund periods", (await q(`select count(*)::int c from stock_fundamentals`)).c);
+console.log("announcements", (await q(`select count(*)::int c from announcements`)).c);
+console.log("news", (await q(`select count(*)::int c from news_items`)).c);
+console.log("mappings", (await q(`select count(*)::int c from news_stock_map`)).c);
+console.log("signals", (await q(`select count(*)::int c from ai_signals`)).c);
+console.log("events", (await q(`select count(*)::int c from breaking_events`)).c);
+console.log("commodities", (await q(`select count(*)::int c from commodities`)).c);
+console.log("reports", (await q(`select count(*)::int c from reports`)).c);
+console.log("rankings", (await q(`select count(*)::int c from rankings`)).c);
+process.exit(0);

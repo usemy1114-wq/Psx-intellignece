@@ -1,0 +1,11 @@
+import { db } from "./server/_core/db";
+import { sql } from "drizzle-orm";
+const c:any = await db.execute(sql.raw(`select category, count(*)::int c from discovery_lists group by category order by category`));
+for (const r of c.rows) console.log(r.category.padEnd(24), r.c);
+console.log("--- revenue_growth top5");
+const t:any = await db.execute(sql.raw(`select d.rank, d.symbol, s.name, s.sales_growth_yoy, s.profit_growth_yoy, s.eps_growth_yoy from discovery_lists d join stocks s on s.symbol=d.symbol where d.category='revenue_growth' order by d.rank limit 5`));
+for (const r of t.rows) console.log(r.rank, r.symbol, r.name?.slice(0,30), "sales%", r.sales_growth_yoy?.toFixed(1), "profit%", r.profit_growth_yoy?.toFixed(1));
+console.log("--- events count");
+const e:any = await db.execute(sql.raw(`select count(*)::int c from events`));
+console.log(e.rows[0].c);
+process.exit(0);

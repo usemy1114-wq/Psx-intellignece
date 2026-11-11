@@ -1,0 +1,11 @@
+import { db } from "./server/_core/db";
+import { sql } from "drizzle-orm";
+const c:any = await db.execute(sql.raw(`select symbol,name,price,source from commodities order by symbol`));
+for (const r of c.rows) console.log(r.symbol, r.price, "|", r.source);
+const n:any = await db.execute(sql.raw(`select count(*)::int c from news_items`));
+console.log("news total:", n.rows[0].c);
+const m:any = await db.execute(sql.raw(`select count(*)::int c from news_symbol_map`));
+console.log("mappings:", m.rows[0].c);
+const t:any = await db.execute(sql.raw(`select symbol, count(*)::int c from news_symbol_map group by symbol order by c desc limit 12`));
+console.log(t.rows);
+process.exit(0);
